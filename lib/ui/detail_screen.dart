@@ -9,7 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 class DetailScreen extends StatefulWidget {
   final String? url;
-  const DetailScreen({Key? key, this.url}) : super(key: key);
+  final String? display;
+  const DetailScreen({Key? key, this.url, this.display}) : super(key: key);
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -48,8 +49,9 @@ class _DetailScreenState extends State<DetailScreen> {
   _save() async{
     var status = await Permission.storage.request();
     if(status.isGranted){
+      _toastInfo("Please wait.. Downloading Wallpaper");
       var response = await Dio()
-          .get(widget.url!, options: Options(responseType: ResponseType.bytes));
+          .get(widget.display!, options: Options(responseType: ResponseType.bytes));
       final result = await ImageGallerySaver.saveImage(
         Uint8List.fromList(response.data),
         quality: 80,

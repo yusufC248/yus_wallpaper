@@ -25,19 +25,40 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState(){
     super.initState();
     if(controller.text.isNotEmpty){
-      _getData();
+      _getData(query);
     }
   }
 
 
-  Future<void> _getData() async{
+  Future<void> _getData(String keyword) async{
     isLoading = true;
-    query = controller.text;
+    keyword = controller.text;
+    page = 1;
     var _data = await ApiImage.fetchData(controller.text, page);
     data = _data.results!;
+    print("page : "+page.toString());
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<void> _nextData() async{
+    isLoading = true;
+    query = controller.text;
+    page+=1;
+    var _data = await ApiImage.fetchData(controller.text, page);
+    data = _data.results!;
+    print("page : "+page.toString());
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _getData(query);
+    _nextData();
   }
 
   
@@ -46,30 +67,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              child: TextField(
-                onEditingComplete: _getData,
-                controller: controller,
-                decoration: InputDecoration(
-                    hintText: 'Search here',
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                child: TextField(
+                  onSubmitted: _getData,
+                  controller: controller,
+                  decoration: InputDecoration(
+                      hintText: 'Search here',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24))),
+                ),
               ),
-            ),
-            Visibility(
-              visible: data.isNotEmpty,
-              child:  isLoading ? CircularProgressIndicator() : Expanded(
-                child: Padding(
+              Visibility(
+                visible: data.isNotEmpty,
+                child:  isLoading ? const CircularProgressIndicator() : Expanded(
+                  child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: StaggeredGridView.countBuilder(
                       itemCount: data.length,
                       crossAxisCount: 2,
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return DetailScreen(url: data[index].urls!.full!,);
+                          return DetailScreen(url: data[index].urls!.regular!, display: data[index].urls!.full! ,);
 
                         })),
                         child: ClipRRect(
@@ -77,26 +98,30 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Image.network(data[index].urls!.small!),
                         ),
                       ),
-                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                      staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
                       mainAxisSpacing: 5.0,
                       crossAxisSpacing: 5.0,
-                  )
+                     )
+                   ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: data.isNotEmpty,
-              child: OutlinedButton(
-                  onPressed: (){
-                    page += 1;
-                    setState(() {
-                      _getData();
-                    });
-                  }, child: Text("Next Page")),
-            )
-          ],
+            ],
+          ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Visibility(
+        visible: data.isNotEmpty,
+        child: FloatingActionButton(
+          elevation: 24,
+          onPressed: (){
+            setState(() {
+              _nextData();
+            });
+          },
+          child: Icon(Icons.navigate_next_outlined),
         ),
       ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
     );
   }
 }
