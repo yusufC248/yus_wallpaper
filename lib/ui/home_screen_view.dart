@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     page = 1;
     var _data = await ApiImage.fetchData(controller.text, page);
     data = _data.results!;
-    print("page : "+page.toString());
     setState(() {
       isLoading = false;
     });
@@ -48,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
     page+=1;
     var _data = await ApiImage.fetchData(controller.text, page);
     data = _data.results!;
-    print("page : "+page.toString());
     setState(() {
       isLoading = false;
     });
@@ -69,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                 child: TextField(
                   onSubmitted: _getData,
                   controller: controller,
@@ -111,17 +109,19 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Visibility(
         visible: data.isNotEmpty,
-        child: FloatingActionButton(
+        child: FloatingActionButton.extended(
           elevation: 24,
           onPressed: (){
             setState(() {
               _nextData();
             });
           },
-          child: Icon(Icons.navigate_next_outlined),
+          label: Text("Next Page", style: TextStyle(color: Colors.redAccent),),
+          icon: Icon(Icons.navigate_next, color: Colors.redAccent,),
+          backgroundColor: Colors.white70,
         ),
       ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+
     );
   }
 }

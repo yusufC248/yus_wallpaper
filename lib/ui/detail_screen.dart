@@ -93,7 +93,7 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _save,
-        child: const Icon(Icons.download),
+        child: const Icon(Icons.download,),
       ),
     );
   }
