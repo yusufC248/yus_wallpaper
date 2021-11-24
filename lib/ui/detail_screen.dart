@@ -70,6 +70,11 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        title: Text("Yus Wallpaper", style: TextStyle(color: Colors.white),),
+      ),
       body: FutureBuilder(
         future: _value,
         builder: (
