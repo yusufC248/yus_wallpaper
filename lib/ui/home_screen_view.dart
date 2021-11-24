@@ -54,6 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
     page+=1;
     var _data = await ApiImage.fetchData(keyword, page);
     data = _data.results!;
+    if(data.isEmpty){
+
+    }
     setState(() {
       isLoading = false;
     });
@@ -107,10 +110,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ):
               SizedBox(height: 5,),
-              Visibility(
-                  visible: data.isEmpty,
-                  child: Text("Query not found")
-              ),
+              // Visibility(
+              //     visible: data.isEmpty,
+              //     child: Center(child: Text("Query not found"))
+              // ),
               Visibility(
                 visible: data.isNotEmpty,
                 child:  isLoading ? Center(child: const CircularProgressIndicator()) : Expanded(
