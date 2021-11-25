@@ -110,10 +110,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ):
               SizedBox(height: 5,),
-              // Visibility(
-              //     visible: data.isEmpty,
-              //     child: Center(child: Text("Query not found"))
-              // ),
+              Visibility(
+                  visible: data.isEmpty,
+                  child: Center(child: CircularProgressIndicator())
+              ),
               Visibility(
                 visible: data.isNotEmpty,
                 child:  isLoading ? Center(child: const CircularProgressIndicator()) : Expanded(
