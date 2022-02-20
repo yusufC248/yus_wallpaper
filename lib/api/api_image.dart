@@ -1,7 +1,9 @@
 import 'dart:convert';
 
-import 'data.dart';
+
 import 'package:http/http.dart' as http;
+
+import 'Data.dart';
 
 class ApiImage{
   static Future<Data> fetchData(String query, int page) async {
